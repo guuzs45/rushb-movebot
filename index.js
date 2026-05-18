@@ -20,7 +20,12 @@ const usuariosPermitidos = [
 ];
 
 client.once('clientReady', () => {
+
     console.log(`Bot online: ${client.user.tag}`);
+
+    // TESTE TOKEN
+    console.log('TOKEN EXISTE:', !!process.env.TOKEN);
+    console.log('TOKEN:', process.env.TOKEN);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -159,5 +164,8 @@ client.on('interactionCreate', async interaction => {
         });
     }
 });
+
+console.log('TOKEN EXISTE:', !!process.env.TOKEN);
+console.log('TOKEN:', process.env.TOKEN);
 
 client.login(process.env.TOKEN);
