@@ -58,11 +58,20 @@ client.on('interactionCreate', async interaction => {
             try {
 
                 await member.voice.setChannel(destino);
+
                 total++;
+
+                // Delay anti rate limit
+                await new Promise(resolve =>
+                    setTimeout(resolve, 250)
+                );
 
             } catch (err) {
 
-                console.log(err);
+                console.log(
+                    `Erro ao mover ${member.user.tag}:`,
+                    err
+                );
             }
         }
 
