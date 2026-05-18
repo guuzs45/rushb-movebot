@@ -1,0 +1,27 @@
+{
+  "name": "rushb-movebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guuzs45/rushb-movebot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/guuzs45/rushb-movebot/issues"
+  },
+  "homepage": "https://github.com/guuzs45/rushb-movebot#readme",
+  "dependencies": {
+    "@discordjs/rest": "^2.6.1",
+    "discord-api-types": "^0.38.47",
+    "discord.js": "^14.26.4",
+    "dotenv": "^17.4.2"
+  }
+}
