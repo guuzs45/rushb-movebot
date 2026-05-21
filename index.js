@@ -19,7 +19,7 @@ const usuariosPermitidos = [
     '217817250709635074'
 ];
 
-client.once('clientReady', () => {
+client.once('ready', () => {
     console.log(`Bot online: ${client.user.tag}`);
 });
 
@@ -84,10 +84,22 @@ client.on('interactionCreate', async interaction => {
             const agora = new Date();
 
             const data =
-                agora.toLocaleDateString('pt-BR');
+                agora.toLocaleDateString(
+                    'pt-BR',
+                    {
+                        timeZone: 'America/Sao_Paulo'
+                    }
+                );
 
             const hora =
-                agora.toLocaleTimeString('pt-BR');
+                agora.toLocaleTimeString(
+                    'pt-BR',
+                    {
+                        timeZone: 'America/Sao_Paulo',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }
+                );
 
             // Nome personalizado
             let nomeDG = 'DG';
