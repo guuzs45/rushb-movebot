@@ -140,7 +140,7 @@ client.on('interactionCreate', async interaction => {
 🛡️ **Off Tank:** @
 *Bolsas*
 
-⏳ **Arcano Elevado:** @
+🐍 **Cajado Petrificante (Cobra):** @
 *Capuz | Capote | Elmo*
 
 🔮 **Arcano Silence:** @
