@@ -1,135 +1,80 @@
-require('dotenv').config();
+const membros = origem.members;
 
-const {
-    Client,
-    GatewayIntentBits
-} = require('discord.js');
+let total = 0;
 
-const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildVoiceStates,
-        GatewayIntentBits.GuildMembers
-    ]
-});
+const agora = new Date();
 
-// IDs permitidos
-const usuariosPermitidos = [
-    '414636718235320341',
-    '217817250709635074'
-];
-
-client.once('ready', () => {
-    console.log(`Bot online: ${client.user.tag}`);
-});
-
-client.on('interactionCreate', async interaction => {
-
-    if (!interaction.isChatInputCommand()) return;
-
-    if (interaction.commandName === 'mover') {
-
-        // Bloqueia usuários não autorizados
-        if (!usuariosPermitidos.includes(interaction.user.id)) {
-
-            return interaction.reply({
-                content: '❌ Você não possui permissão para usar este comando.',
-                flags: 64
-            });
+const data =
+    agora.toLocaleDateString(
+        'pt-BR',
+        {
+            timeZone: 'America/Sao_Paulo'
         }
+    );
 
-        const origem = interaction.options.getChannel('origem');
-        const destino = interaction.options.getChannel('destino');
-
-        if (!origem || !destino) {
-
-            return interaction.reply({
-                content: '❌ Canais inválidos.',
-                flags: 64
-            });
+const hora =
+    agora.toLocaleTimeString(
+        'pt-BR',
+        {
+            timeZone: 'America/Sao_Paulo',
+            hour: '2-digit',
+            minute: '2-digit'
         }
+    );
 
-        const membros = origem.members;
+// Nome personalizado
+let nomeDG = 'DG';
 
-        let total = 0;
+if (interaction.user.id === '414636718235320341') {
+    nomeDG = 'DG Guuzs';
+}
 
-        for (const [id, member] of membros) {
+if (interaction.user.id === '217817250709635074') {
+    nomeDG = 'DG Geminha';
+}
 
-            try {
+for (const [id, member] of membros) {
 
-                await member.voice.setChannel(destino);
+    try {
 
-                total++;
+        await member.voice.setChannel(destino);
 
-                // Delay anti rate limit
-                await new Promise(resolve =>
-                    setTimeout(resolve, 250)
-                );
+        total++;
 
-            } catch (err) {
+        await new Promise(resolve =>
+            setTimeout(resolve, 250)
+        );
 
-                console.log(
-                    `Erro ao mover ${member.user.tag}:`,
-                    err
-                );
-            }
-        }
+    } catch (err) {
 
-        // Canal onde será criada a thread
-        const canalLogs =
-            interaction.guild.channels.cache.get('1504505938865033296');
+        console.log(
+            `Erro ao mover ${member.user.tag}:`,
+            err
+        );
+    }
+}
 
-        if (canalLogs) {
+// Canal da DG
+const canalLogs =
+    interaction.guild.channels.cache.get('1504505938865033296');
 
-            const agora = new Date();
+if (canalLogs) {
 
-            const data =
-                agora.toLocaleDateString(
-                    'pt-BR',
-                    {
-                        timeZone: 'America/Sao_Paulo'
-                    }
-                );
+    const mensagem = await canalLogs.send({
+        content: `## ${nomeDG}`
+    });
 
-            const hora =
-                agora.toLocaleTimeString(
-                    'pt-BR',
-                    {
-                        timeZone: 'America/Sao_Paulo',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }
-                );
+    const thread = await mensagem.startThread({
 
-            // Nome personalizado
-            let nomeDG = 'DG';
+        name:
+            `${nomeDG} • ${data} • ${hora}`,
 
-            if (interaction.user.id === '414636718235320341') {
-                nomeDG = 'DG Guuzs';
-            }
+        autoArchiveDuration: 1440
+    });
 
-            if (interaction.user.id === '217817250709635074') {
-                nomeDG = 'DG Geminha';
-            }
+    await thread.send({
 
-            // Mensagem base para criar thread
-            const mensagem = await canalLogs.send({
-                content: `## ${nomeDG}`
-            });
-
-            // Criação da thread
-            const thread = await mensagem.startThread({
-
-                name:
-                    `${nomeDG} • ${data} • ${hora}`,
-
-                autoArchiveDuration: 1440
-            });
-
-            // Mensagem principal da thread
-            await thread.send({
-
-                content:
+        content:
 `══════════════ 💰 ══════════════
       **O QUE CADA CLASSE DEVE LOOTEAR**
 ══════════════ 💰 ══════════════
@@ -168,17 +113,38 @@ client.on('interactionCreate', async interaction => {
 *Sacolas do Chão | O que sobrar do baú*
 
 ══════════════════════════════════════════`
-            });
-        }
+    });
+}
 
-        await interaction.reply({
+// Canal DPS Meter
+const canalDps =
+    interaction.guild.channels.cache.get('1509353909183971498');
 
-            content:
-                `✅ ${total} membros movidos.`,
+if (canalDps) {
 
-            flags: 64
-        });
-    }
+    const mensagemDps = await canalDps.send({
+        content: `## ${nomeDG}`
+    });
+
+    const threadDps = await mensagemDps.startThread({
+
+        name:
+            `${nomeDG} • ${data} • ${hora}`,
+
+        autoArchiveDuration: 1440
+    });
+
+    await threadDps.send({
+
+        content:
+            'Envie print e os dados do Dps Metter abaixo.'
+    });
+}
+
+await interaction.reply({
+
+    content:
+        `✅ ${total} membros movidos.`,
+
+    flags: 64
 });
-
-client.login(process.env.TOKEN);
