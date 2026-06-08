@@ -1,80 +1,132 @@
-const membros = origem.members;
+require('dotenv').config();
 
-let total = 0;
+const {
+    Client,
+    GatewayIntentBits
+} = require('discord.js');
 
-const agora = new Date();
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMembers
+    ]
+});
 
-const data =
-    agora.toLocaleDateString(
-        'pt-BR',
-        {
-            timeZone: 'America/Sao_Paulo'
+// IDs permitidos
+const usuariosPermitidos = [
+    '414636718235320341',
+    '217817250709635074'
+];
+
+client.once('ready', () => {
+    console.log(`Bot online: ${client.user.tag}`);
+});
+
+client.on('interactionCreate', async interaction => {
+
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === 'mover') {
+
+        // Bloqueia usuários não autorizados
+        if (!usuariosPermitidos.includes(interaction.user.id)) {
+
+            return interaction.reply({
+                content: '❌ Você não possui permissão para usar este comando.',
+                flags: 64
+            });
         }
-    );
 
-const hora =
-    agora.toLocaleTimeString(
-        'pt-BR',
-        {
-            timeZone: 'America/Sao_Paulo',
-            hour: '2-digit',
-            minute: '2-digit'
+        const origem = interaction.options.getChannel('origem');
+        const destino = interaction.options.getChannel('destino');
+
+        if (!origem || !destino) {
+
+            return interaction.reply({
+                content: '❌ Canais inválidos.',
+                flags: 64
+            });
         }
-    );
 
-// Nome personalizado
-let nomeDG = 'DG';
+        const membros = origem.members;
 
-if (interaction.user.id === '414636718235320341') {
-    nomeDG = 'DG Guuzs';
-}
+        let total = 0;
 
-if (interaction.user.id === '217817250709635074') {
-    nomeDG = 'DG Geminha';
-}
+        const agora = new Date();
 
-for (const [id, member] of membros) {
+        const data =
+            agora.toLocaleDateString(
+                'pt-BR',
+                {
+                    timeZone: 'America/Sao_Paulo'
+                }
+            );
 
-    try {
+        const hora =
+            agora.toLocaleTimeString(
+                'pt-BR',
+                {
+                    timeZone: 'America/Sao_Paulo',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            );
 
-        await member.voice.setChannel(destino);
+        // Nome personalizado
+        let nomeDG = 'DG';
 
-        total++;
+        if (interaction.user.id === '414636718235320341') {
+            nomeDG = 'DG Guuzs';
+        }
 
-        await new Promise(resolve =>
-            setTimeout(resolve, 250)
-        );
+        if (interaction.user.id === '217817250709635074') {
+            nomeDG = 'DG Geminha';
+        }
 
-    } catch (err) {
+        for (const [id, member] of membros) {
 
-        console.log(
-            `Erro ao mover ${member.user.tag}:`,
-            err
-        );
-    }
-}
+            try {
 
-// Canal da DG
-const canalLogs =
-    interaction.guild.channels.cache.get('1504505938865033296');
+                await member.voice.setChannel(destino);
 
-if (canalLogs) {
+                total++;
 
-    const mensagem = await canalLogs.send({
-        content: `## ${nomeDG}`
-    });
+                // Delay anti rate limit
+                await new Promise(resolve =>
+                    setTimeout(resolve, 250)
+                );
 
-    const thread = await mensagem.startThread({
+            } catch (err) {
 
-        name:
-            `${nomeDG} • ${data} • ${hora}`,
+                console.log(
+                    `Erro ao mover ${member.user.tag}:`,
+                    err
+                );
+            }
+        }
 
-        autoArchiveDuration: 1440
-    });
+        // Canal onde será criada a thread principal
+        const canalLogs =
+            interaction.guild.channels.cache.get('1504505938865033296');
 
-    await thread.send({
+        if (canalLogs) {
 
-        content:
+            const mensagem = await canalLogs.send({
+                content: `## ${nomeDG}`
+            });
+
+            const thread = await mensagem.startThread({
+
+                name:
+                    `${nomeDG} • ${data} • ${hora}`,
+
+                autoArchiveDuration: 1440
+            });
+
+            await thread.send({
+
+                content:
 `══════════════ 💰 ══════════════
       **O QUE CADA CLASSE DEVE LOOTEAR**
 ══════════════ 💰 ══════════════
@@ -113,38 +165,42 @@ if (canalLogs) {
 *Sacolas do Chão | O que sobrar do baú*
 
 ══════════════════════════════════════════`
-    });
-}
+            });
+        }
 
-// Canal DPS Meter
-const canalDps =
-    interaction.guild.channels.cache.get('1509353909183971498');
+        // Canal DPS Meter
+        const canalDps =
+            interaction.guild.channels.cache.get('1509353909183971498');
 
-if (canalDps) {
+        if (canalDps) {
 
-    const mensagemDps = await canalDps.send({
-        content: `## ${nomeDG}`
-    });
+            const mensagemDps = await canalDps.send({
+                content: `## ${nomeDG}`
+            });
 
-    const threadDps = await mensagemDps.startThread({
+            const threadDps = await mensagemDps.startThread({
 
-        name:
-            `${nomeDG} • ${data} • ${hora}`,
+                name:
+                    `${nomeDG} • ${data} • ${hora}`,
 
-        autoArchiveDuration: 1440
-    });
+                autoArchiveDuration: 1440
+            });
 
-    await threadDps.send({
+            await threadDps.send({
 
-        content:
-            'Envie print e os dados do Dps Metter abaixo.'
-    });
-}
+                content:
+                    'Envie print e os dados do Dps Metter abaixo.'
+            });
+        }
 
-await interaction.reply({
+        await interaction.reply({
 
-    content:
-        `✅ ${total} membros movidos.`,
+            content:
+                `✅ ${total} membros movidos.`,
 
-    flags: 64
+            flags: 64
+        });
+    }
 });
+
+client.login(process.env.TOKEN);
