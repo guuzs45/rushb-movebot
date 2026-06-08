@@ -106,7 +106,7 @@ client.on('interactionCreate', async interaction => {
             }
         }
 
-        // Canal onde será criada a thread principal
+        // Canal principal da DG
         const canalLogs =
             interaction.guild.channels.cache.get('1504505938865033296');
 
@@ -189,7 +189,9 @@ client.on('interactionCreate', async interaction => {
             await threadDps.send({
 
                 content:
-                    'Envie print e os dados do Dps Metter abaixo.'
+`${interaction.user}
+
+Envie print e os dados do Dps Metter abaixo.`
             });
         }
 
