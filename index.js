@@ -19,7 +19,7 @@ const usuariosPermitidos = [
     '217817250709635074'
 ];
 
-client.once('ready', () => {
+client.once('clientReady', () => {
     console.log(`Bot online: ${client.user.tag}`);
 });
 
