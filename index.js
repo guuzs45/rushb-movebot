@@ -137,11 +137,8 @@ client.on('interactionCreate', async interaction => {
 🛡️ **Off Tank:** @
 *Bolsas*
 
-🐍 **Cajado Petrificante (Cobra):** @
+⏳ **Arcano Elevado**:** @
 *Capuz | Capote | Elmo*
-
-🔮 **Arcano Silence:** @
-*Armas T7/T8*
 
 💚 **Main Healer:** @
 *Sapatos | Botas | Sandálias*
@@ -150,16 +147,19 @@ client.on('interactionCreate', async interaction => {
 *Peitos T6 | Artefatos de Craft*
 
 ⚔️ **DPS 01:** @
-*Armas Melee T6*
+*Armas Melee*
 
 ⚔️ **DPS 02:** @
-*Armas Ranged T6*
+*Armas Ranged*
 
 ⚔️ **DPS 03:** @
 *Capas*
 
 ⚔️ **DPS 04:** @
-*Off-hands | Peitos T7/T8*
+*Off-hands*
+
+⚔️ **DPS 05:** @
+*Armadura | Casaco | Robe*
 
 👀 **Scout:** @
 *Sacolas do Chão | O que sobrar do baú*
